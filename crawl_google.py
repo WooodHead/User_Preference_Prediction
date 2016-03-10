@@ -1,4 +1,4 @@
-#!/usr/bin/python  
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Create by Meibenjin. 
@@ -166,7 +166,7 @@ class GoogleAPI:
                     fout.close()
                     results = self.extractSearchResults(html)
                     search_results.extend(results)
-                    time.sleep(30)
+                    time.sleep(random.randint(5, 10))
                     break
                 except urllib2.URLError, e:
                     print 'url error:', e
@@ -201,15 +201,21 @@ def crawler():
     expect_num = 10
     # if no parameters, read query keywords from file
     if(len(sys.argv) < 2):
+        count = 0
         keywords = open('./query.txt', 'r')
-        for i in range(0, 158):
-            keyword = keywords.readline().strip()
+        for i in range(0, 239):
+            keywords.readline().strip()
         keyword = keywords.readline().strip()
-        while(keyword):
-            results = api.search(keyword, num = expect_num)
+        while keyword:
+            results = api.search(keyword, num=expect_num)
             for r in results:
                 r.printIt()
             keyword = keywords.readline()
+            count += 1
+            if count % 10 == 9:
+                count = 0
+                random_time = random.randint(240, 360)
+                time.sleep(random_time)
         keywords.close()
     else:
         keyword = sys.argv[1]
