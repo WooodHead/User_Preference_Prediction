@@ -145,7 +145,7 @@ class GoogleAPI:
         for p in range(0, pages):
             start = p * results_per_page 
             url = '%s/search?hl=%s&num=%d&start=%s&q=%s' % (base_url, lang, results_per_page, start, query)
-            retry = 1
+            retry = 3
             while(retry > 0):
                 try:
                     request = urllib2.Request(url)
@@ -166,6 +166,7 @@ class GoogleAPI:
                     fout.close()
                     results = self.extractSearchResults(html)
                     search_results.extend(results)
+                    time.sleep(30)
                     break
                 except urllib2.URLError, e:
                     print 'url error:', e
@@ -200,7 +201,9 @@ def crawler():
     expect_num = 10
     # if no parameters, read query keywords from file
     if(len(sys.argv) < 2):
-        keywords = open('./keywords', 'r')
+        keywords = open('./query.txt', 'r')
+        for i in range(0, 158):
+            keyword = keywords.readline().strip()
         keyword = keywords.readline().strip()
         while(keyword):
             results = api.search(keyword, num = expect_num)
