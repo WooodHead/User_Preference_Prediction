@@ -17,7 +17,7 @@ import re, random, types
 
 from bs4 import BeautifulSoup 
 
-base_url = 'https://www.google.com.hk/'
+base_url = 'https://www.google.co.jp/'
 results_per_page = 10
 
 user_agents = list()
@@ -100,7 +100,7 @@ class GoogleAPI:
     def extractSearchResults(self, html):
         results = list()
         soup = BeautifulSoup(html)
-        div = soup.find('div', id  = 'search')
+        div = soup.find('div', id = 'search')
         if (type(div) != types.NoneType):
             lis = div.findAll('li', {'class': 'g'})
             if(len(lis) > 0):
@@ -203,8 +203,8 @@ def crawler():
     if(len(sys.argv) < 2):
         count = 0
         keywords = open('./query.txt', 'r')
-        for i in range(0, 239):
-            keywords.readline().strip()
+        '''for i in range(0, 239):
+            keywords.readline().strip()'''
         keyword = keywords.readline().strip()
         while keyword:
             results = api.search(keyword, num=expect_num)
