@@ -7,7 +7,7 @@ import time
 import random
 
 
-def load_user_agent():
+'''def load_user_agent():
     fp = open('./user_agents', 'r')
     line = fp.readline().strip('\n')
     while line:
@@ -15,7 +15,7 @@ def load_user_agent():
         line = fp.readline().strip('\n')
     fp.close()
 
-user_agents = list()
+user_agents = list()'''
 
 
 def extract_baidu(query):
@@ -26,10 +26,10 @@ def extract_baidu(query):
     while retry > 0:
         try:
             req_timeout = 5
-            length = len(user_agents)
+            '''length = len(user_agents)
             index = random.randint(0, length-1)
-            user_agent = user_agents[index]
-            header = {'user-agent': user_agent}
+            user_agent = user_agents[index]'''
+            header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0'}
             req = urllib2.Request(url, None, header)
             resp = urllib2.urlopen(req, None, req_timeout)
             html = resp.read()
@@ -53,7 +53,7 @@ def extract_baidu(query):
 query_file = open("./query.txt", "r")
 queries = query_file.readlines()
 count = 0
-load_user_agent()
+# load_user_agent()
 for query in queries:
     query = query.replace("\n", "")
     try:
