@@ -19,7 +19,7 @@ user_agents = list()
 
 
 def extract_bing(query):
-    url = "http://www.google.com.hk/search?hl=zh&q="
+    url = "http://cn.bing.com/search?hl=zh&q="
     url += urllib2.quote(query)
     retry = 3
     while retry > 0:
@@ -33,7 +33,7 @@ def extract_bing(query):
             resp = urllib2.urlopen(req, None, req_timeout)
             html = resp.read()
             #print html
-            fout = open('./SERP_google/' + query + '_google.html', 'w')
+            fout = open('./SERP_bing/' + query + '_bing.html', 'w')
             print html
             fout.write(html)
             fout.close()
