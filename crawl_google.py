@@ -7,7 +7,7 @@ import time
 import random
 
 
-def load_user_agent():
+'''def load_user_agent():
     fp = open('./user_agents', 'r')
     line = fp.readline().strip('\n')
     while line:
@@ -15,24 +15,25 @@ def load_user_agent():
         line = fp.readline().strip('\n')
     fp.close()
 
-user_agents = list()
+user_agents = list()'''
 
 
-def extract_bing(query):
-    url = "http://www.google.com.hk/search?hl=zh&q="
+def extract_google(query):
+    url = "https://www.google.com.hk/search?&q="
     url += urllib2.quote(query)
+    url += "&ie=utf-8"
     retry = 3
     while retry > 0:
         try:
             req_timeout = 5
-            length = len(user_agents)
+            '''length = len(user_agents)
             index = random.randint(0, length-1)
-            user_agent = user_agents[index]
-            header = {'user-agent': user_agent}
+            user_agent = user_agents[index]'''
+            header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0'}
             req = urllib2.Request(url, None, header)
             resp = urllib2.urlopen(req, None, req_timeout)
             html = resp.read()
-            #print html
+            # print html
             fout = open('./SERP_google/' + query + '_google.html', 'w')
             print html
             fout.write(html)
@@ -43,7 +44,6 @@ def extract_bing(query):
             time.sleep(60)
             retry = retry - 1
             continue
-
         except Exception, e:
             print 'error:', e
             retry = retry - 1
@@ -53,18 +53,18 @@ def extract_bing(query):
 query_file = open("./query.txt", "r")
 queries = query_file.readlines()
 count = 0
-load_user_agent()
+# load_user_agent()
 for query in queries:
     query = query.replace("\n", "")
     try:
-        extract_bing(query)
+        extract_google(query)
         random_time_s = random.randint(5, 10)
         time.sleep(random_time_s)
         print query
         count += 1
-        if count % 10 == 9:
+        if count % 10 == 0:
             count = 0
-            random_time = random.randint(240, 360)
+            random_time = random.randint(60, 120)
             time.sleep(random_time)
     except:
         continue
