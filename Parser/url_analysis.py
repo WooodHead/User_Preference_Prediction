@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'franky'
 
-from Parser.Baidu_extract_url import *
-from Parser.Sogou_extract_url import *
+from Baidu_extract_url import *
+from Sogou_extract_url import *
 import urllib2
 
 
