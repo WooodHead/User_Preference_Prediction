@@ -13,7 +13,10 @@ def sogou_extract_urls(sogou_serp):
     soup = BeautifulSoup(sogou_serp)
     h3s = soup.find_all(class_='vrTitle') + soup.find_all(class_='pt')
     for h3 in h3s:
-        url = h3.a['href'].strip()
+        try:
+            url = h3.a['href'].strip()
+        except:
+            continue
         retry = 3
         while retry:
             try:
