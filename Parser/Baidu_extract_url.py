@@ -40,12 +40,14 @@ def baidu_extract_urls(baidu_serp):
                 except:
                     retry -= 1
                     continue
+            if not retry:
+                result_urls.append('')
 
     return result_urls
 
 
 if __name__ == '__main__':
-    queries = open('../query.txt', 'r').readlines()
+    queries = open('../data/query.txt', 'r').readlines()
     for i in range(0, 10):
         query = queries[i].strip()
         baidu_serp = open('../SERP_baidu/' + query + '_baidu.html', 'r').read()

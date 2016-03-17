@@ -7,34 +7,20 @@ import time
 import random
 
 
-'''def load_user_agent():
-    fp = open('./user_agents', 'r')
-    line = fp.readline().strip('\n')
-    while line:
-        user_agents.append(line)
-        line = fp.readline().strip('\n')
-    fp.close()
-
-user_agents = list()'''
-
-
-def extract_baidu(query):
-    url = "https://www.baidu.com/s?wd="
+def extract_google(query):
+    url = "https://www.google.com.hk/search?&q="
     url += urllib2.quote(query)
     url += "&ie=utf-8"
     retry = 3
     while retry > 0:
         try:
             req_timeout = 5
-            '''length = len(user_agents)
-            index = random.randint(0, length-1)
-            user_agent = user_agents[index]'''
             header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0'}
             req = urllib2.Request(url, None, header)
             resp = urllib2.urlopen(req, None, req_timeout)
             html = resp.read()
             # print html
-            fout = open('./SERP_baidu/' + query + '_baidu.html', 'w')
+            fout = open('../SERP_google/' + query + '_google.html', 'w')
             print html
             fout.write(html)
             fout.close()
@@ -50,14 +36,14 @@ def extract_baidu(query):
             time.sleep(60)
             continue
 
-query_file = open("./query.txt", "r")
+query_file = open("../data/query.txt", "r")
 queries = query_file.readlines()
 count = 0
 # load_user_agent()
 for query in queries:
     query = query.replace("\n", "")
     try:
-        extract_baidu(query)
+        extract_google(query)
         random_time_s = random.randint(5, 10)
         time.sleep(random_time_s)
         print query

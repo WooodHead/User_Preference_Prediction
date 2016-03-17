@@ -43,7 +43,7 @@ def sogou_extract_urls(sogou_serp):
 
 
 if __name__ == '__main__':
-    queries = open('../query.txt', 'r').readlines()
+    queries = open('../data/query.txt', 'r').readlines()
     for i in range(0, 10):
         query = queries[i].strip()
         sogou_serp = open('../SERP_sogou/' + query + '_sogou.html', 'r').read()

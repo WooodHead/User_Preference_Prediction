@@ -38,7 +38,7 @@ def compute_Jaccard(baidu_urls, sogou_urls):
 
 
 def url_analysis():
-    queries = open('../query.txt', 'r').readlines()
+    queries = open('../data/query.txt', 'r').readlines()
     fout = open('../data/url_jaccard.csv', 'w')
     for i in range(0, len(queries)):
         query = queries[i].strip()
