@@ -30,4 +30,5 @@ while True:
         jaccard_num[0.9] += 1
     else:
         jaccard_num[1.0] += 1
-print jaccard_num
+for i in range(1, 11):
+    print float(i) / 10, jaccard_num[float(i) / 10]
