@@ -21,7 +21,6 @@ def extract_sogou(query):
             html = resp.read()
             # print html
             fout = open('../SERP_sogou/' + query + '_sogou.html', 'w')
-            print html
             fout.write(html)
             fout.close()
             break

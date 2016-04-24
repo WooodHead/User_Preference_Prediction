@@ -44,15 +44,44 @@ def clean_baidu_html(query, html):
     content_left = soup.select("div#content_left")
     if len(content_left) > 0:
         content_left[0]['style'] = "padding-left: 15px"
-    fout = open('../' + query + '_baidu.html', 'w')
+
+    for div in soup.select("div#content_left > div"):
+        is_result = False
+        try:
+            for cla in div['class']:
+                if cla == "c-container":
+                    is_result = True
+        except:
+            continue
+        if is_result:
+            continue
+        div.extract()
+    fout = open('../' + query + '_sogou.html', 'w')
     fout.write(str(soup).replace("百度", "").replace("搜狗", ""))
     fout.close()
 
 
 if __name__ == '__main__':
-    check_querys = ['窗花的剪法', '龙珠国语', '腾讯游戏大全', '怎样开红酒瓶塞', '金铃怨攻略']
+    '''f_query = open('../data/query.txt', 'r')
+    count = 0
+    while True:
+        query = f_query.readline().strip()
+        if not query:
+            break
+        try:
+            fin = open('../../annotation_platform/static/SERP_baidu/' + query + '_baidu.html', 'r')
+            html = fin.read()
+            fin.close()
+        except:
+            continue
+        clean_baidu_html(query, html)
+        count += 1
+        print count
+    f_query.close()'''
+
+    check_querys = ['窗花的剪法', '怎样开红酒瓶塞', '龙珠国语', '贝瓦故事', 'NBA直播']
     for query in check_querys:
-        fin = open('../' + query + '_baidu.html', 'r')
+        fin = open('../' + query + '_sogou.html', 'r')
         html = fin.read()
         fin.close()
         clean_baidu_html(query, html)
