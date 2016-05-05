@@ -1,0 +1,3 @@
+query	rank	left	top	width	height
+河北科技大学	4	35	521	67	67
+河北科技大学	5	35	700	220	268

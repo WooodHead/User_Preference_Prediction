@@ -23,6 +23,9 @@ class Position:
     def Print(self):
         print str(self.type_) + "\t" + str(self.qid)+"\t" + self.query + "\t" + str(self.rank) + "\t" + "(" + str(self.left) + "," + str(self.top) + ")\t" + "(" + str(self.width) + "," + str(self.height) + ")"
 
+    def output(self):
+        return [self.query, str(self.rank), str(self.left), str(self.top), str(self.width), str(self.height)]
+
 
 class ParseSogouPosition:
     def get_positon(self, start_a, end_b, windows, query_file_path, page_folder_path):
@@ -35,7 +38,12 @@ class ParseSogouPosition:
             query = query.strip()
             queries.append(query)
 
+        query_count = 0
         for i in range(start_a, end_b):  # the range of query
+            if i == len(queries):
+                break
+            if query_count == 2000:
+                break
             query = queries[i]
             file_path = page_folder_path + query + '_sogou.html'
             code_file_path = page_folder_path + urllib2.quote(query, '+') + '_sogou.html'
@@ -64,6 +72,8 @@ class ParseSogouPosition:
                         Images = []
                         for image in images:
                             image = image.find_element_by_xpath('..')
+                            if image.size['width'] == 0 or image.size['height'] == 0:
+                                continue
                             image_position = Position("image", i, query, count, image.location['x'], image.location['y'], image.size['width'], image.size['height'])
                             Images.append(image_position)
                         Images_position.append(Images)
@@ -72,7 +82,8 @@ class ParseSogouPosition:
                 driver.quit()
                 results_position_list.append(Results_position)
                 images_position_list.append(Images_position)
-                print "Sogou " + query
+                query_count += 1
+                print "Sogou " + query, query_count
             except:
                 continue
 
@@ -81,11 +92,22 @@ class ParseSogouPosition:
 
 if __name__ == '__main__':
     l = ParseSogouPosition()
-    results_position_list, images_position_list = l.get_positon(1, 3, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_sogou/")
+    results_position_list, images_position_list = l.get_positon(1, 100, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_sogou/")
+    fout = open('../data/sogou_results_position.txt', 'w')
+    fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Results in results_position_list:
         for item in Results:
             item.Print()
+            fout.write('\t'.join(item.output()))
+            fout.write('\n')
+    fout.close()
+
+    fout = open('../data/sogou_images_position.txt', 'w')
+    fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Images in images_position_list:
         for images in Images:
             for item in images:
                 item.Print()
+                fout.write('\t'.join(item.output()))
+                fout.write('\n')
+    fout.close()
