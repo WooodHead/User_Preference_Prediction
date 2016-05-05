@@ -38,11 +38,9 @@ class ParseSogouPosition:
             query = query.strip()
             queries.append(query)
 
-        query_count = 0
+        driver = webdriver.PhantomJS()
         for i in range(start_a, end_b):  # the range of query
-            if i == len(queries):
-                break
-            if query_count == 2000:
+            if i >= len(queries):
                 break
             query = queries[i]
             file_path = page_folder_path + query + '_sogou.html'
@@ -57,7 +55,6 @@ class ParseSogouPosition:
                 Results_position = []
                 Images_position = []
                 count = 0
-                driver = webdriver.PhantomJS()
                 driver.get(code_file_path)
                 content_results = driver.find_element_by_id('main')
                 divs = content_results.find_elements_by_css_selector('div')
@@ -79,21 +76,20 @@ class ParseSogouPosition:
                         Images_position.append(Images)
                         if count == windows:
                             break
-                driver.quit()
                 results_position_list.append(Results_position)
                 images_position_list.append(Images_position)
-                query_count += 1
-                print "Sogou " + query, query_count
+                print "Sogou " + query
             except:
                 continue
 
+        driver.quit()
         return results_position_list, images_position_list
 
 
 if __name__ == '__main__':
     l = ParseSogouPosition()
-    results_position_list, images_position_list = l.get_positon(1, 100, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_sogou/")
-    fout = open('../data/sogou_results_position.txt', 'w')
+    results_position_list, images_position_list = l.get_positon(101, 201, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_sogou/")
+    fout = open('../data/sogou_results_position2.txt', 'w')
     fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Results in results_position_list:
         for item in Results:
@@ -102,7 +98,7 @@ if __name__ == '__main__':
             fout.write('\n')
     fout.close()
 
-    fout = open('../data/sogou_images_position.txt', 'w')
+    fout = open('../data/sogou_images_position2.txt', 'w')
     fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Images in images_position_list:
         for images in Images:
