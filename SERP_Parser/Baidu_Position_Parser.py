@@ -74,7 +74,7 @@ class ParseBaiduPosition:
                         break
                 results_position_list.append(Results_position)
                 images_position_list.append(Images_position)
-                print "Baidu " + query
+                print "Baidu " + query, i
             except:
                 continue
 
@@ -84,8 +84,8 @@ class ParseBaiduPosition:
 
 if __name__ == '__main__':
     l = ParseBaiduPosition()
-    results_position_list, images_position_list = l.get_positon(101, 201, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_baidu/")
-    fout = open('../data/baidu_results_position2.txt', 'w')
+    results_position_list, images_position_list = l.get_positon(1, 2088, 10, "../data/query.txt", "../../annotation_platform/static/SERP_baidu/")
+    fout = open('../data/baidu_results_position.txt', 'w')
     fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Results in results_position_list:
         for item in Results:
@@ -94,7 +94,7 @@ if __name__ == '__main__':
             fout.write('\n')
     fout.close()
 
-    fout = open('../data/baidu_images_position2.txt', 'w')
+    fout = open('../data/baidu_images_position.txt', 'w')
     fout.write('query\trank\tleft\ttop\twidth\theight\n')
     for Images in images_position_list:
         for images in Images:
