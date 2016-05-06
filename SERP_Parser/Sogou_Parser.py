@@ -101,7 +101,7 @@ class SearchResult:
             self.others = 0
 
     def Print(self):
-        print str(self.qid)+"\t" + self.query + "\t" + str(self.rank) + "\t" + self.title + "\t" + self.url + "\tfigure? " + str(self.figure)
+        print str(self.qid)+"\t" + self.query + "\t" + str(self.rank) + "\t" + self.title.strip() + "\t" + self.snippet.strip() + '\t' + self.url + "\tfigure? " + str(self.figure)
 
     def output_category(self):
         category_name = ["encyclopedia", "gps_map", "forum", "download", "image", "image_text", "video", "news", "experience", "reading", "others"]
@@ -124,7 +124,8 @@ class ParseSogou:
             queries.append(query)
 
         for i in range(start_a, end_b):  # the range of query
-            # file_path = "../Sogou/"+queries[i]
+            if i >= len(queries):
+                break
             query = queries[i]
             file_path = page_folder_path + query + '_sogou.html'
             try:
@@ -134,7 +135,7 @@ class ParseSogou:
                 continue
 
             # print file_path
-            print "Sogou " + query
+            print "Sogou " + query, i
             Results = []
             count = 0
             p = Parser()
@@ -168,10 +169,19 @@ class ParseSogou:
 
 if __name__ == '__main__':
     l = ParseSogou()
-    resultlist  = l.getResults(1, 101, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_sogou/")
+    resultlist  = l.getResults(1, 2088, 10, "../data/query.txt", "../../annotation_platform/static/SERP_sogou/")
+    fout = open('../data/sogou_results_info.txt', 'w')
+    fout.write('query\trank\ttitle\tsnippet\tmainurl\tverticaltype\n')
     for Results in resultlist:
         for item in Results:
             item.Print()
             item.output_category()
-        # for item in Result:
-        # item.Print()
+
+            vertical_type = 'organic'
+            category_name = ["encyclopedia", "gps_map", "forum", "download", "image", "image_text", "video", "news", "experience", "reading", "others"]
+            for i in range(len(category_name)):
+                if str(eval(str("item.")+str(category_name[i]))) == '1':
+                    vertical_type = category_name[i]
+            fout.write(item.query + "\t" + str(item.rank) + "\t" + item.title.strip() + "\t" + item.snippet.strip() + '\t' + item.url + '\t' + vertical_type)
+            fout.write('\n')
+    fout.close()

@@ -59,7 +59,7 @@ class SearchResult:
             self.gps_map = 0
         if vertical_dictionary['forum'] == 1:
             self.forum = 1
-            self.vertical = 1
+            self.vertical = 0
         else:
             self.forum = 0
         if vertical_dictionary['download'] == 1:
@@ -84,7 +84,7 @@ class SearchResult:
             self.video = 0
         if vertical_dictionary['news'] == 1:
             self.news = 1
-            self.vertical = 1
+            self.vertical = 0
         else:
             self.news = 0
         if vertical_dictionary['experience'] == 1:
@@ -104,7 +104,7 @@ class SearchResult:
             self.others = 0
 
     def Print(self):
-        print str(self.qid)+"\t" + self.query + "\t" + str(self.rank) + "\t" + self.title + "\t" + self.url + "\tfigure? " + str(self.figure)
+        print str(self.qid)+"\t" + self.query + "\t" + str(self.rank) + "\t" + self.title.strip() + "\t" + self.snippet.strip() + '\t' + self.url + "\tfigure? " + str(self.figure)
 
     def output_category(self):
         category_name = ["encyclopedia", "gps_map", "forum", "download", "image", "image_text", "video", "news", "experience", "reading", "others"]
@@ -148,7 +148,7 @@ class ParseBaidu:
         else:
             vertical_dictionary["image_text"] = 0
 
-        if child["tpl"] == "vd_mininewest" or "tvideo" in child["tpl"] or "single_video" in child["tpl"] or child["srcid"] == '1538':
+        if child["tpl"] == "vd_mininewest" or "tvideo" in child["tpl"] or "single_video" in child["tpl"]:
             vertical_dictionary["video"] = 1
         else:
             vertical_dictionary["video"] = 0
@@ -195,7 +195,8 @@ class ParseBaidu:
             queries.append(query)
 
         for i in range(start_a, end_b):
-            # file_path = "../Baidu/"+queries[i]
+            if i >= len(queries):
+                break
             query = queries[i]
             file_path = page_folder_path + query + '_baidu.html'
             try:
@@ -213,7 +214,7 @@ class ParseBaidu:
             count = 0
             Results = []
             # print file_path
-            print "Baidu " + query
+            print "Baidu " + query, i
             flag = 0
 
             for child in container_l.children:
@@ -282,8 +283,19 @@ class ParseBaidu:
 
 if __name__ == "__main__":
     l = ParseBaidu()
-    resultlist  = l.getResults(1, 101, 10, "../data/query.txt", "/Users/franky/undergraduate/courses/graduation_project/annotation_platform/static/SERP_baidu/")
+    resultlist  = l.getResults(1, 2088, 10, "../data/query.txt", "../../annotation_platform/static/SERP_baidu/")
+    fout = open('../data/baidu_results_info.txt', 'w')
+    fout.write('query\trank\ttitle\tsnippet\tmainurl\tverticaltype\n')
     for Results in resultlist:
         for item in Results:
             item.Print()
             item.output_category()
+
+            vertical_type = 'organic'
+            category_name = ["encyclopedia", "gps_map", "forum", "download", "image", "image_text", "video", "news", "experience", "reading", "others"]
+            for i in range(len(category_name)):
+                if str(eval(str("item.")+str(category_name[i]))) == '1':
+                    vertical_type = category_name[i]
+            fout.write(item.query + "\t" + str(item.rank) + "\t" + item.title.strip() + "\t" + item.snippet.strip() + '\t' + item.url + '\t' + vertical_type)
+            fout.write('\n')
+    fout.close()
