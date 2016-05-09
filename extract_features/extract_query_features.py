@@ -19,12 +19,12 @@ def extract_query_features(query):
 if __name__ == "__main__":
     f_query = open('../data/query.txt', 'r')
     fout = open('./query_features.txt', 'w')
-    fout.write('char_length\tword_length\tquery\n')
+    fout.write('query\tchar_length\tword_length\n')
     while True:
         query = f_query.readline().strip()
         if not query:
             break
         query_features = extract_query_features(query)
-        fout.write(str(query_features[0]) + '\t' + str(query_features[1]) + '\t' + query + '\n')
+        fout.write(query + '\t' + str(query_features[0]) + '\t' + str(query_features[1]) + '\n')
     fout.close()
     f_query.close()

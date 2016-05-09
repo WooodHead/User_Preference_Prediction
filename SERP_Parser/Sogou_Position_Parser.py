@@ -60,7 +60,7 @@ class ParseSogouPosition:
                 divs = content_results.find_elements_by_css_selector('div')
                 for div in divs:
                     classes = div.get_attribute('class').split(' ')
-                    if 'rb' in classes or 'vrwrap' in classes:
+                    if 'rb' in classes or 'vrwrap' in classes or 'vrPic' in classes:
                         count += 1
                         result_position = Position("query", i, query, count, div.location['x'], div.location['y'], div.size['width'], div.size['height'])
                         Results_position.append(result_position)
@@ -68,11 +68,15 @@ class ParseSogouPosition:
                         images = div.find_elements_by_css_selector("img")
                         Images = []
                         for image in images:
-                            image = image.find_element_by_xpath('..')
-                            if image.size['width'] == 0 or image.size['height'] == 0:
-                                continue
-                            image_position = Position("image", i, query, count, image.location['x'], image.location['y'], image.size['width'], image.size['height'])
-                            Images.append(image_position)
+                            anchor = image.find_element_by_xpath('..')
+                            if anchor.size['width'] == 0 or anchor.size['height'] == 0:
+                                if image.size['width'] == 0 or image.size['height'] == 0:
+                                    continue
+                                image_position = Position("image", i, query, count, image.location['x'], image.location['y'], image.size['width'], image.size['height'])
+                                Images.append(image_position)
+                            else:
+                                image_position = Position("image", i, query, count, anchor.location['x'], anchor.location['y'], anchor.size['width'], anchor.size['height'])
+                                Images.append(image_position)
                         Images_position.append(Images)
                         if count == windows:
                             break
@@ -83,6 +87,7 @@ class ParseSogouPosition:
                 continue
 
         driver.quit()
+        driver.stop_client()
         return results_position_list, images_position_list
 
 
