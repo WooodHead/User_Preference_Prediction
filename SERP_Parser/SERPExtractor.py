@@ -131,7 +131,7 @@ class Parser:
             for titlenode in titlelist:
                 if u'class' in titlenode.attrs:
                     classvalues = titlenode['class']
-                    if 'vrTitle' in classvalues:
+                    if 'vrTitle' in classvalues or 'vrt' in classvalues:
                         for item in titlenode.children:
                             if item.name == 'a':
                                 text = ''
@@ -292,6 +292,14 @@ class Parser:
                                     rtr.append(parseresult)
                             if 'rb' in classvalues:
                                 parseresult = self.parseDiv(div,'rb')
+                                if parseresult.rank != -1:
+                                    rtr.append(parseresult)
+                            if 'vrPic' in classvalues:
+                                parseresult = self.parseDiv(div,'vrwrap')
+                                if parseresult.rank != -1:
+                                    rtr.append(parseresult)
+                            if 'aggrBox' in classvalues:
+                                parseresult = self.parseDiv(div,'vrwrap')
                                 if parseresult.rank != -1:
                                     rtr.append(parseresult)
 

@@ -8,6 +8,22 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 
+def clean(text):
+    ret = ''
+    segs = text.strip().split('\n')
+    for seg in segs:
+        ret += seg
+    segs = ret.split('\t')
+    ret = ''
+    for seg in segs:
+        ret += seg
+    segs = ret.split(' ')
+    ret = ''
+    for seg in segs:
+        ret += seg
+    return ret
+
+
 class SearchResult:
     title = ""
     snippet = ""
@@ -241,13 +257,17 @@ class ParseBaidu:
                     if len(img) != 0:
                         figure = 1
                     # try:
-                    h3node = child.find_all("h3")[0]
                     title = ''
-                    for line in h3node.get_text().split('\n'):
-                        if line.strip() != '':
-                                title += line.strip()+' '
-                    anchor = h3node.find_all("a")[0]
-                    url = anchor['href']
+                    anchor = ''
+                    url = ''
+                    h3nodes = child.select("[class~=t]")
+                    if len(h3nodes) > 0:
+                        h3node = h3nodes[0]
+                        for line in h3node.get_text().split('\n'):
+                            if line.strip() != '':
+                                    title += line.strip()+' '
+                        anchor = h3node.find_all("a")[0]
+                        url = anchor['href']
 
                     # except:
                     #     title = child.find_all("div",class_="op-soft-title")[0]
@@ -256,6 +276,7 @@ class ParseBaidu:
                     if len(abstracts) > 0:
                         abstract = abstracts[0]
                         snippet = abstract.get_text(strip=True)
+
                     else:
                         abstracts = child.select("div[class~=c-span18]")
                         if len(abstracts) > 0:
@@ -265,10 +286,11 @@ class ParseBaidu:
                             snippet = ""
 
                     vertical_dictionary = self.get_vertical_dictionary(child, image_text, vertical)
+                    title = clean(title)
+                    snippet = clean(snippet)
                     result = SearchResult(i, query, count, title, snippet, url, vertical, figure, vertical_dictionary)
 
                     Results.append(result)
-
 
                 except:
                     count -= 1

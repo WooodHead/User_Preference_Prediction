@@ -5,6 +5,22 @@ __author__ = 'franky'
 from SERPExtractor import Parser
 
 
+def clean(text):
+    ret = ''
+    segs = text.strip().split('\n')
+    for seg in segs:
+        ret += seg
+    segs = ret.split('\t')
+    ret = ''
+    for seg in segs:
+        ret += seg
+    segs = ret.split(' ')
+    ret = ''
+    for seg in segs:
+        ret += seg
+    return ret
+
+
 class SearchResult:
     title = ""
     snippet = ""
@@ -156,6 +172,9 @@ class ParseSogou:
                     snippet = item.othertext
                 else:
                     snippet = item.summary
+
+                title = clean(title)
+                snippet = clean(snippet)
 
                 result = SearchResult(i,query,count,title,snippet,url,vertical,item.figure,item.vertical_dictionary)
                 Results.append(result)

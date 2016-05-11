@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'franky'
 
-fout = open('./output.csv', 'w')
-f_annotation = open('../data/annotation.txt', 'r')
+fout = open('./output_weak.csv', 'w')
+f_annotation = open('../data/annotation_weak.txt', 'r')
 f_query_features = open('./query_features.txt', 'r')
 f_serp_features = open('./SERP_features.txt', 'r')
 features_name = []
@@ -49,6 +49,6 @@ for query in preference_dict.keys():
         if preference_dict[query] == 'tie':
             fout.write('tie\n')
         else:
-            fout.write('difference\n')
+            fout.write('different\n')
         count += 1
         print count
